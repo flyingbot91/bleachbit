@@ -92,13 +92,13 @@ class CLITestCase(common.BleachbitTestCase):
 
     def test_invalid_locale(self):
         """Unit test for invalid locales"""
-        lang = os.environ['LANG']
-        os.environ['LANG'] = 'blahfoo'
+        old_lang = common.get_env('LANG')
+        common.put_env('LANG', 'blahfoo')
         # tests are run from the parent directory
         args = [sys.executable, '-m', 'bleachbit.CLI', '--version']
         output = run_external(args)
         self.assertNotEqual(output[1].find('Copyright'), -1, str(output))
-        os.environ['LANG'] = lang
+        common.put_env('LANG', old_lang)
 
     def test_preview(self):
         """Unit test for --preview option"""
@@ -109,7 +109,16 @@ class CLITestCase(common.BleachbitTestCase):
         args_list = []
         module = 'bleachbit.CLI'
         big_args = [sys.executable, '-m', module, '--preview', ]
-        for cleaner in cleaners_list():
+        # The full list can take a long time and generally does not improve the testing,
+        # so test a subset.
+        full_cleaners_list = list(cleaners_list())
+        system_cleaners = [
+            c for c in full_cleaners_list if c.startswith('system.')]
+        non_system_cleaners = [
+            c for c in full_cleaners_list if not c.startswith('system.')]
+        import random
+        sample_cleaners = random.sample(non_system_cleaners, 5)
+        for cleaner in (system_cleaners + sample_cleaners):
             args_list.append(
                 [sys.executable, '-m', module, '--preview', cleaner])
             big_args.append(cleaner)

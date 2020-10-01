@@ -20,24 +20,23 @@
 
 
 -->
-<cleaner id="firefox">
-  <label>Firefox</label>
+<cleaner id="palemoon">
+  <label>Pale Moon</label>
   <description>Web browser</description>
-  <running type="exe" os="unix">firefox</running>
-  <running type="exe" os="unix">firefox-bin</running>
-  <running type="exe" os="windows">firefox.exe</running>
-  <running type="pathname">~/.mozilla/firefox/*.default/lock</running>
+  <running type="exe" os="unix">palemoon</running>
+  <running type="exe" os="windows">palemoon.exe</running>
+  <running type="pathname">~/.moonchild productions/pale moon/*/lock</running>
   <var name="base">
-    <value os="windows">%AppData%\Mozilla\Firefox</value>
-    <value os="linux">~/.mozilla/firefox</value>
-    <value os="freebsd">~/.mozilla/firefox</value>
-    <value os="openbsd">~/.mozilla/firefox</value>
+    <value os="windows">%AppData%\moonchild productions\value</value>
+    <value os="linux">~/.moonchild productions/pale moon</value>
+    <value os="freebsd">~/.moonchild productions/pale moon</value>
+    <value os="openbsd">~/.moonchild productions/pale moon</value>
   </var>
   <var name="profile">
-    <value search="glob" os="windows">%AppData%\Mozilla\Firefox\Profiles\*</value>
-    <value search="glob" os="linux">~/.mozilla/firefox/*</value>
-    <value search="glob" os="freebsd">~/.mozilla/firefox/*</value>
-    <value search="glob" os="openbsd">~/.mozilla/firefox/*</value>
+    <value search="glob" os="windows">%AppData%\moonchild productions\pale moon\Profiles\*</value>
+    <value search="glob" os="linux">~/.moonchild productions/pale moon/*</value>
+    <value search="glob" os="freebsd">~/.moonchild productions/pale moon/*</value>
+    <value search="glob" os="openbsd">~/.moonchild productions/pale moon/*</value>
   </var>
   <option id="backup">
     <label>Backup files</label>
@@ -48,32 +47,21 @@
   <option id="cache">
     <label>Cache</label>
     <description>Delete the cache</description>
-    <!-- 
-This Linux path is whitelisted under the System - Cache cleaner, so it is not
-redundant. Also, this Linux path contains the cache2 and OfflineCache directories.
--->
-    <action command="delete" search="walk.all" path="~/.cache/mozilla/"/>
-    <action command="delete" search="walk.all" path="%LocalAppData%\Mozilla\Firefox\Profiles\*\cache2"/>
-    <action command="delete" search="walk.all" path="%LocalAppData%\Mozilla\Firefox\Profiles\*\jumpListCache"/>
-    <action command="delete" search="walk.all" path="%LocalAppData%\Mozilla\Firefox\Profiles\*\OfflineCache"/>
-    <!--
-This file no longer exists in Firefox <=62
-
-Necko Predictive Network Actions
-https://wiki.mozilla.org/Privacy/Reviews/Necko
--->
-    <action command="delete" search="file" path="$$profile$$/netpredictions.sqlite"/>
+    <action command="delete" search="walk.all" path="~/.cache/moonchild productions/"/>
+    <action command="delete" search="walk.all" path="%LocalAppData%\moonchild productions\pale moon\Profiles\*\cache2"/>
+    <action command="delete" search="walk.all" path="%LocalAppData%\moonchild productions\pale moon\Profiles\*\jumpListCache"/>
+    <action command="delete" search="walk.all" path="%LocalAppData%\moonchild productions\pale moon\Profiles\*\OfflineCache"/>
   </option>
   <option id="cookies">
     <label>Cookies</label>
     <description>Delete cookies, which contain information such as web site preferences, authentication, and tracking identification</description>
-    <action command="delete" search="file" path="$$profile$$/cookies.txt"/>
     <action command="delete" search="file" path="$$profile$$/cookies.sqlite"/>
     <action command="delete" search="file" path="$$profile$$/cookies.sqlite-shm"/>
     <action command="delete" search="file" path="$$profile$$/cookies.sqlite-wal"/>
     <!-- this deletes contents of the http directories -->
     <!-- this deletes the http directories -->
     <action command="delete" search="walk.all" path="$$profile$$/storage/default/http*"/>
+    <action command="delete" search="walk.all" path="$$profile$$/storage/temporary/http*"/>
     <action command="delete" search="glob" path="$$profile$$/storage/default/http*"/>
   </option>
   <option id="crash_reports">
@@ -86,22 +74,18 @@ https://wiki.mozilla.org/Privacy/Reviews/Necko
     <label translators="DOM=Document Object Model">DOM Storage</label>
     <description>Delete HTML5 cookies</description>
     <action command="delete" search="file" path="$$profile$$/webappsstore.sqlite"/>
+    <action command="delete" search="file" path="$$profile$$/webappsstore.sqlite-shm"/>
+    <action command="delete" search="file" path="$$profile$$/webappsstore.sqlite-wal"/>
   </option>
   <option id="forms">
     <label>Form history</label>
     <description>A history of forms entered in web sites and in the Search bar</description>
-    <action command="delete" search="file" path="$$profile$$/formhistory.dat"/>
     <action command="delete" search="file" path="$$profile$$/formhistory.sqlite"/>
   </option>
   <option id="passwords">
     <label>Passwords</label>
     <description>A database of usernames and passwords as well as a list of sites that should not store passwords</description>
     <warning>This option will delete your saved passwords.</warning>
-    <!-- http://kb.mozillazine.org/Password_Manager -->
-    <action command="delete" search="file" path="$$profile$$/signons.txt"/>
-    <action command="delete" search="file" path="$$profile$$/signons2.txt"/>
-    <action command="delete" search="file" path="$$profile$$/signons3.txt"/>
-    <action command="delete" search="file" path="$$profile$$/signons.sqlite"/>
     <action command="delete" search="file" path="$$profile$$/logins.json"/>
   </option>
   <option id="session_restore">
@@ -134,15 +118,8 @@ sessionCheckpoints.json
     <label>URL history</label>
     <description>List of visited web pages</description>
     <action command="delete" search="file" path="$$profile$$/SiteSecurityServiceState.txt"/>
-    <action command="delete" search="walk.all" path="%LocalAppData%\Mozilla\Firefox\Profiles\*\thumbnails"/>
-    <!-- Firefox versions 1 and 2 -->
-    <action command="delete" search="file" path="$$profile$$/history.dat"/>
-    <action command="delete" search="file" path="$$profile$$/downloads.rdf"/>
-    <!-- Firefox 3 introduced downloads.sqlite and places.sqlite -->
     <action command="delete" search="file" path="$$profile$$/downloads.sqlite"/>
     <action command="mozilla.url.history" search="file" path="$$profile$$/places.sqlite"/>
-    <!-- Firefox 78 (or probably some previous version) moved icons from places.sqlite to favicons.sqlite -->
-    <action command="delete" search="file" path="$$profile$$/favicons.sqlite"/>
   </option>
   <option id="vacuum">
     <label>Vacuum</label>
